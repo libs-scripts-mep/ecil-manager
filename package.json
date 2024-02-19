@@ -1,0 +1,24 @@
+{
+  "name": "@libs-scripts-mep/ecil-menager",
+  "version": "1.0.0",
+  "description": "Biblioteca responsável por realizar a manipulação do cappo ecil através da comunicação serial",
+  "main": "ecil-menager.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/libs-scripts-mep/ecil-menager.git"
+  },
+  "keywords": [
+    "cappo",
+    "ecil",
+    "comunicação"
+  ],
+  "author": "Thiago Santos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/libs-scripts-mep/ecil-menager/issues"
+  },
+  "homepage": "https://github.com/libs-scripts-mep/ecil-menager#readme"
+}
