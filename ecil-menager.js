@@ -37,7 +37,7 @@ export default class CappoEcil {
         }
     }
 
-    static async Connect() {
+    static async connect() {
         while (!Socket.IO.connected) { await SerialUtil.Delay(1000); console.log(`CappoEcil: Aguardando conexão com server...`) }
 
         const discover = await this.serial.portDiscover({ request: this.reqGetValues, regex: this.regexGetValues }, { manufacturer: "FTDI" })
@@ -46,7 +46,7 @@ export default class CappoEcil {
         return { success: true, msg: `CappoEcil: Conexão bem sucedida` }
     }
 
-    static async SetOutputConfig(sensor, temperature, compensation = true) {
+    static async setOutputConfig(sensor, temperature, compensation = true) {
 
         let result, configs, hexValueTemp, checkSum, dataAux = '00';
 
@@ -109,7 +109,7 @@ export default class CappoEcil {
 
     }
 
-    static async ReadInput() {
+    static async readInput() {
 
         console.group(`Read Input Cappo`)
 
@@ -122,7 +122,7 @@ export default class CappoEcil {
 
     }
 
-    static async TransformTempValue(number) {
+    static async transformTempValue(number) {
 
         return new Promise((resolve) => {
 
@@ -174,7 +174,7 @@ export default class CappoEcil {
 
     }
 
-    static async CalculateAmbientValue(rlTrigger, timeouts = { waitStabilize: 5000, waitTurnOff: 1000 }) {
+    static async calculateAmbientValue(rlTrigger, timeouts = { waitStabilize: 5000, waitTurnOff: 1000 }) {
 
         DAQ.ligaRele(rlTrigger)
 
