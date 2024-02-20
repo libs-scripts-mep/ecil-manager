@@ -1,6 +1,5 @@
-import { Socket } from "../node_modules/@libs-scripts-mep/serialport-websocket/client.js";
-import { SerialReqManager, SerialUtil } from "../node_modules/@libs-scripts-mep/serialport-websocket/serial.js";
-import { GeneralCompose } from "./general-compose.js";
+import { Socket } from "@libs-scripts-mep/serialport-websocket";
+import { SerialReqManager, SerialUtil } from "@libs-scripts-mep/serialport-websocket/serial.js";
 
 
 export default class CappoEcil {
@@ -11,8 +10,7 @@ export default class CappoEcil {
     static reqGetValues = `01180000000000`
     static regexGetValues = `010`
 
-
-    static Sensors = { J: '00', K: '01', PT100: '0E' }
+    static sensors = { J: '00', K: '01', PT100: '0E' }
 
     static Configs = {
         ITS: {
@@ -37,6 +35,13 @@ export default class CappoEcil {
         }
     }
 
+    /**
+     * Makes serial connection with the CappoEcil
+     * @returns {Object} {success: boolean, msg: string} 
+     * @example
+     * const connectEcil = await CappoEcil.connect()
+     */
+
     static async connect() {
         while (!Socket.IO.connected) { await SerialUtil.Delay(1000); console.log(`CappoEcil: Aguardando conexão com server...`) }
 
@@ -45,6 +50,16 @@ export default class CappoEcil {
 
         return { success: true, msg: `CappoEcil: Conexão bem sucedida` }
     }
+
+    /**
+     * 
+     * @param {CappoEcil.sensors} sensor tipo do sensor, acessado pela propriedade CappoEcil.sensors
+     * @param {Number} temperature valor da temperatura
+     * @param {Boolean} compensation flag para habilitar o desabilitar a compensação
+     * @returns {Object} {success: boolean, msg: string} 
+     * @example 
+     * await CappoEcil.setOutputConfig(CappoEcil.sensors['J'], 10, true)
+     */
 
     static async setOutputConfig(sensor, temperature, compensation = true) {
 
@@ -57,7 +72,7 @@ export default class CappoEcil {
         }
 
         configs = configs.toString(16).toUpperCase()
-        hexValueTemp = await this.TransformTempValue(temperature)
+        hexValueTemp = await this.transformTempValue(temperature)
         checkSum = (parseInt(hexValueTemp[0] + hexValueTemp[1], 16) + parseInt(hexValueTemp[2] + hexValueTemp[3], 16)).toString(16).toLocaleUpperCase()
 
         if (parseInt(checkSum, 16) > parseInt('7F', 16) && parseInt(checkSum, 16) <= 256) {
@@ -84,6 +99,14 @@ export default class CappoEcil {
         return { success: true, msg: `Nova configuração recebida` }
     }
 
+    /**
+     * 
+     * @param {Boolean} compensation flag para habilitar o desabilitar a compensação 
+     * @returns {Object} {success: boolean, msg: string} 
+     * @example 
+     * await CappoEcil.setInput(true)
+     */
+
     static async setInput(compensation = false) {
 
         console.group(`Set in Input Cappo`)
@@ -109,6 +132,13 @@ export default class CappoEcil {
 
     }
 
+    /**
+     * 
+     * @returns {Object} {success: boolean, msg: string} 
+     * @example 
+     * const inputValue = await CappoEcil.readInput()
+     */
+
     static async readInput() {
 
         console.group(`Read Input Cappo`)
@@ -121,6 +151,14 @@ export default class CappoEcil {
         return { success: true, response: result.response }
 
     }
+
+    /**
+     * 
+     * @param {Number} number numero em decimal a ser convertido para o padrão do cappo (hex)
+     * @returns {Array} [nibble, nibble, nibble, nibble] 
+     * @example 
+     * const hexValueTemp = await this.transformTempValue(temperature)
+     */
 
     static async transformTempValue(number) {
 
@@ -154,9 +192,7 @@ export default class CappoEcil {
 
                 number = number.toString(2).substring(1) // Transforma em binario e retira o sinal negativo
 
-                let numberSize = number.length
-
-                for (let i = 0; i < numberSize; i++) {
+                for (let i = 0; i < number.length; i++) {
                     number = '0'.concat(number) // colocar o numero de 0 que esta faltando para fechar os 16 bits
                 }
 
@@ -166,7 +202,7 @@ export default class CappoEcil {
 
                 number = parseInt(number, 2).toString(16).toLocaleUpperCase().split("") // transforma numero em hexadecimal e separa em array
 
-                resolve([number[0], number[1], number[2], number[3]])
+                resolve([number[0], number[1], number[2], number[3]]) // retorna cada nibble em uma posição do array
 
             }
 
@@ -174,26 +210,6 @@ export default class CappoEcil {
 
     }
 
-    static async calculateAmbientValue(rlTrigger, timeouts = { waitStabilize: 5000, waitTurnOff: 1000 }) {
-
-        DAQ.ligaRele(rlTrigger)
-
-        const setResult = await CappoEcil.setInput(true)
-        if (!setResult.success) { return { success: false, msg: `Falha na transmissão de dados com o Cappo Ecil.` } }
-
-        await GeneralCompose.Delay(timeouts.waitStabilize)
-
-        const inputValue = await CappoEcil.ReadInput()
-        console.log(inputValue)
-        if (!inputValue.success) { return { success: false, msg: `Falha na transmissão de dados com o Cappo Ecil.` } }
-
-        const ambient = (parseInt(inputValue.response.substring(8, 12), 16)) / 10
-
-        DAQ.desligaRele(rlTrigger)
-        GeneralCompose.Delay(timeouts.waitTurnOff)
-        return { success: true, ambient: ambient }
-
-    }
 
     static {
         window.CappoEcil = CappoEcil

@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/libs-scripts-mep/ecil-menager/issues"
   },
-  "homepage": "https://github.com/libs-scripts-mep/ecil-menager#readme"
+  "homepage": "https://github.com/libs-scripts-mep/ecil-menager#readme",
+  "dependencies": {
+    "@libs-scripts-mep/serialport-websocket": "^1.6.3"
+  }
 }
