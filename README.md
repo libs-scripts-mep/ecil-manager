@@ -23,8 +23,8 @@
 
 #### Instruction 
 
-    Existem varias funções que podem ser utilizadas no cappo ecil, elas podem ser observadas no documento
-    'Protocolo-Comunicação-Cappo-10-Plus.pdf', mas as mais utilizadas são:
+    Existem varias funções que podem ser utilizadas no cappo ecil, elas podem ser observadas no 
+    documento 'Protocolo-Comunicação-Cappo-10-Plus.pdf', mas as mais utilizadas são:
 
     | Instrução                        | Valor | Tipo  |
     | -------------------------------- | ----- | ----- |
@@ -54,7 +54,7 @@
         Descrição: Na escrita do tipo de sensor o valor manipulado deve ser o [DATA1], o restante deve ser 
         preenchido com 0x00, a baixo temos a tabala dos principais sensores com seus valores. 
 
-        OBS: O checksum também deve ser manipulado.
+        OBS: O chksum também deve ser manipulado.
 
             | Sensor | Valor de escrita |
             | ------ | ---------------- |
@@ -70,11 +70,11 @@
     0x1A:
 
         Descrição: Na escrita das configurações do cappo o valor a ser manipulado é o [DATA1], para 
-        manipulaçãodesse byte é utilizado um sistema de soma de bits, ou seja caso o objetivo seja 
+        manipulação desse byte é utilizado um sistema de soma de bits, ou seja caso o objetivo seja 
         adicionar duas configurações, será a soma dos valores dessas configurações a ser mandado pelo 
         [DATA1], segue os pricipais valores na tabela a baixo.
 
-        OBS: O checksum também deve ser manipulado.
+        OBS: O chksum também deve ser manipulado.
 
             | Configuração | Valor Habilitado    | Valor Desabilitado      |
             | ------------ | ------------------- | ----------------------- |
@@ -85,21 +85,31 @@
             | Casa Decimal | 0x00 0x01 0x02 0x03 | 0x04 (Sem casa decimal) |
                                     
 
-        Exemplo: 0x01 0x1A 0x38 0x00 0x00 0x00 0x38 // Desabilia compensação, seta cappo em saída e habiltia ITS90
+        Exemplo: 0x01 0x1A 0x38 0x00 0x00 0x00 0x38 
+        // Desabilia compensação, seta cappo em saída e habilita ITS90
 
         Resposta: 
 
 
     0x1B:
 
-        Descrição: Na escrita do valor de temperatura os valores a serem manipulados são os [DATA1] e o [DATA2],
-        caso o valor de checksum passe de 256 será manipulado o valor [DATA3], o passo a passo dessa manipulação 
-        pode ser encontrada no documento 'Protocolo-Comunicação-Cappo-10-Plus.pdf'.
+        Descrição: Na escrita do valor de temperatura os valores a serem manipulados são os [DATA1]
+        e o [DATA2], caso o valor de chksum passe de 0x7F será manipulado o valor [DATA3] e refeito o calculo do chksum com o novo valor do [DATA3], o passo
+        a passo dessa manipulação pode ser encontrada no documento 
+        'Protocolo-Comunicação-Cappo-10-Plus.pdf', e podemos observar abaixo um exemplo de 
+        manipulação:
 
-        OBS: O checksum também deve ser manipulado.
+        let DATA3 = 256 - parseInt(checkSum, 16)
+        DATA3 = dataAux.toString(16)
+        checkSum = [DATA1] + [DATA2] + [DATA3] + [DATA4]
+
+        OBS: O chksum também deve ser manipulado.
                                     
-        Exemplo 1: 0x01 0x1B 0x01 0x2C 0x00 0x00 0x2D  // Simulando 300°
-        Exemplo 2: 0x01 0x1B 0x02 0xEE 0x10 0x00 0x00  // Simulando 750° (sendo necessário manipular o [DATA3])
+        Exemplo 1: 0x01 0x1B 0x01 0x2C 0x00 0x00 0x2D  
+        // Simulando 300°
+
+        Exemplo 2: 0x01 0x1B 0x02 0xEE 0x10 0x00 0x00  
+        // Simulando 750° (sendo necessário manipular o [DATA3])
 
         Outra questão é a manipulação de valores negativos, que deve seguir os seguintes passos:
 
@@ -113,4 +123,6 @@
         Exemplo 3: 0x01 0x1B 0xFF 0x42 0x00 0x00 0x41 // Simulando -190°
 
         Resposta: 
+
+#### CHKSUM
 

@@ -75,7 +75,7 @@ export default class CappoEcil {
         hexValueTemp = await this.transformTempValue(temperature)
         checkSum = (parseInt(hexValueTemp[0] + hexValueTemp[1], 16) + parseInt(hexValueTemp[2] + hexValueTemp[3], 16)).toString(16).toLocaleUpperCase()
 
-        if (parseInt(checkSum, 16) > parseInt('7F', 16) && parseInt(checkSum, 16) <= 256) {
+        if (parseInt(checkSum, 16) > parseInt('7F', 16) && parseInt(checkSum, 16) <= 256) { // caso o checksum for maior que 7F deve ser feito a manipulação dos valores
 
             dataAux = 256 - parseInt(checkSum, 16)
             dataAux = dataAux.toString(16)
@@ -189,7 +189,9 @@ export default class CappoEcil {
                 }
 
             } else {
-
+                
+                // TA FEIO EU SEI, MAS É ISSO 
+                
                 number = number.toString(2).substring(1) // Transforma em binario e retira o sinal negativo
 
                 for (let i = 0; i < number.length; i++) {
