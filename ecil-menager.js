@@ -194,7 +194,9 @@ export default class CappoEcil {
                 
                 number = number.toString(2).substring(1) // Transforma em binario e retira o sinal negativo
 
-                for (let i = 0; i < number.length; i++) {
+                const numberSize = number.length
+
+                for (let i = 0; i < numberSize; i++) {
                     number = '0'.concat(number) // colocar o numero de 0 que esta faltando para fechar os 16 bits
                 }
 
