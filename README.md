@@ -93,7 +93,8 @@ As demais informações e instruções estarão disponíveis via JSDocs.
 
         Exemplo: 0x01 0x18 0x00 0x00 0x00 0x00 0x00 // le valores da entrada do cappo.
         Resposta: 0x01 0x18 0x00 0x01 0x2C 0x0A 0x00
-        Os valores lidos da temperatura estarão no 5 e 6 byte da resposta, no caso do exemplo acima será '012C'
+        Os valores lidos da temperatura estarão no 5 e 6 byte da resposta, no caso do exemplo acima será 
+        '012C'
     
 
     0x19:
