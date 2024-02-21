@@ -1,4 +1,51 @@
-# Ecil Menager
+# ecil-menager
+
+- [ecil-menager](#ecil-menager)
+  - [Instalando](#instalando)
+  - [Desinstalando](#desinstalando)
+  - [Atualizando](#atualizando)
+  - [Como utilizar](#como-utilizar)
+  - [Documentação](#documentação)
+  - [Protocolo](#protocolo)
+    - [Template da Requisição](#template-da-requisição)
+      - [IDNAME](#idname)
+      - [Instruction](#instruction)
+      - [DATAS](#datas)
+      - [CHKSUM](#chksum)
+
+## Instalando
+
+Abra o terminal, e na pasta do script, rode:
+
+```
+npm i @libs-scripts-mep/ecil-menager
+```
+
+## Desinstalando
+
+Abra o terminal, e na pasta do script, rode:
+
+```
+npm uninstall @libs-scripts-mep/ecil-menager
+```
+
+## Atualizando
+
+Abra o terminal, e na pasta do script, rode:
+
+```
+npm update @libs-scripts-mep/ecil-menager
+```
+
+## Como utilizar
+
+Realize a importação:
+
+```js
+import CappoEcil from "../node_modules/@libs-scripts-mep/ecil-menager/ecil-menager.js"
+```
+
+As demais informações e instruções estarão disponíveis via JSDocs.
 
 ## Documentação 
 
@@ -11,7 +58,7 @@
 
 ## Protocolo
 
-### Template Requisição 
+### Template da Requisição 
 
     [IDNAME] [Instruction] [DATA1] [DATA2] [DATA3] [DATA4] [CHKSUM]
 
@@ -45,8 +92,8 @@
         Descrição: Na leitura dos valores de temperatura os 'datas' devem ser preenchidos com '0x00'.  
 
         Exemplo: 0x01 0x18 0x00 0x00 0x00 0x00 0x00 // le valores da entrada do cappo.
-
-        Resposta: 
+        Resposta: 0x01 0x18 0x00 0x01 0x2C 0x0A 0x00
+        Os valores lidos da temperatura estarão no 5 e 6 byte da resposta, no caso do exemplo acima será '012C'
     
 
     0x19:
@@ -63,8 +110,7 @@
             | PT100  | 0x0E             |
 
         Exemplo: 0x01 0x19 0x01 0x00 0x00 0x00 0x01 // seta cappo em tipo K
-
-        Resposta: 
+        Resposta: 0x01 0x19 0x01 0x00 0x00 0x00 0x01
 
 
     0x1A:
@@ -88,16 +134,16 @@
         Exemplo: 0x01 0x1A 0x38 0x00 0x00 0x00 0x38 
         // Desabilia compensação, seta cappo em saída e habilita ITS90
 
-        Resposta: 
+        Resposta: 0x01 0x1A 0x38 0x00 0x00 0x00 0x38 
 
 
     0x1B:
 
         Descrição: Na escrita do valor de temperatura os valores a serem manipulados são os [DATA1]
-        e o [DATA2], caso o valor de chksum passe de 0x7F será manipulado o valor [DATA3] e refeito o calculo do chksum com o novo valor do [DATA3], o passo
-        a passo dessa manipulação pode ser encontrada no documento 
-        'Protocolo-Comunicação-Cappo-10-Plus.pdf', e podemos observar abaixo um exemplo de 
-        manipulação:
+        e o [DATA2], caso o valor de chksum passe de 0x7F será manipulado o valor [DATA3] e refeito 
+        o calculo do chksum com o novo valor do [DATA3], o passo a passo dessa manipulação pode ser 
+        encontrada no documento 'Protocolo-Comunicação-Cappo-10-Plus.pdf', e podemos observar abaixo 
+        um exemplo de manipulação:
 
         let DATA3 = 256 - parseInt(checkSum, 16)
         DATA3 = dataAux.toString(16)
@@ -121,8 +167,16 @@
         6. Recalcular o checksum
    
         Exemplo 3: 0x01 0x1B 0xFF 0x42 0x00 0x00 0x41 // Simulando -190°
-
-        Resposta: 
+        Resposta: 0x01 0x1B 0xFF 0x42 0x00 0x00 0x41
 
 #### CHKSUM
+    
+        Descrição: Uma checksum é um pequeno código de informações computadas que trata da integridade 
+        e segurança na transmissão de dados, no protocolo do cappo está definido que o checksum se da
+        pela soma de todos os datas, ou seja o calculo será da seguinte forma:
 
+        checkSum = [DATA1] + [DATA2] + [DATA3] + [DATA4]
+
+        caso o valor de checksum passe de 0x7F será manipulado o valor [DATA3] e refeito 
+        o calculo do checksum, o passo a passo dessa manipulação pode ser encontrada no documento 
+        'Protocolo-Comunicação-Cappo-10-Plus.pdf'
