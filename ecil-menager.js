@@ -1,5 +1,5 @@
-import { Socket } from "@libs-scripts-mep/serialport-websocket";
-import { SerialReqManager, SerialUtil } from "@libs-scripts-mep/serialport-websocket/serial.js";
+import { Socket } from "../serialport-websocket/client.js";
+import { SerialReqManager, SerialUtil } from "../serialport-websocket/serial.js";
 
 
 export default class CappoEcil {
