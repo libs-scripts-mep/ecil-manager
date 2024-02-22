@@ -1,14 +1,14 @@
 {
-  "name": "@libs-scripts-mep/ecil-menager",
-  "version": "1.0.3",
-  "description": "Biblioteca responsável por realizar a manipulação do cappo ecil através da comunicação serial",
+  "name": "@libs-scripts-mep/ecil-manager",
+  "version": "1.0.0",
+  "description": "Biblioteca responsável por realizar a manipulação do cappo ecil através da comunicação serial.",
   "main": "ecil-menager.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/libs-scripts-mep/ecil-menager.git"
+    "url": "git+https://github.com/libs-scripts-mep/ecil-manager.git"
   },
   "keywords": [
     "cappo",
@@ -18,9 +18,9 @@
   "author": "Thiago Santos",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/libs-scripts-mep/ecil-menager/issues"
+    "url": "https://github.com/libs-scripts-mep/ecil-manager/issues"
   },
-  "homepage": "https://github.com/libs-scripts-mep/ecil-menager#readme",
+  "homepage": "https://github.com/libs-scripts-mep/ecil-manager#readme",
   "dependencies": {
     "@libs-scripts-mep/serialport-websocket": "^1.6.3"
   }
