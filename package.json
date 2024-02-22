@@ -2,7 +2,7 @@
   "name": "@libs-scripts-mep/ecil-manager",
   "version": "1.0.1",
   "description": "Biblioteca responsável por realizar a manipulação do cappo ecil através da comunicação serial.",
-  "main": "ecil-menager.js",
+  "main": "ecil-manager.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

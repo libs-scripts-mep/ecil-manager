@@ -1,6 +1,6 @@
-# ecil-menager
+# ecil-manager
 
-- [ecil-menager](#ecil-menager)
+- [ecil-manager](#ecil-manager)
   - [Instalando](#instalando)
   - [Desinstalando](#desinstalando)
   - [Atualizando](#atualizando)
@@ -18,7 +18,7 @@
 Abra o terminal, e na pasta do script, rode:
 
 ```
-npm i @libs-scripts-mep/ecil-menager
+npm i @libs-scripts-mep/ecil-manager
 ```
 
 ## Desinstalando
@@ -26,7 +26,7 @@ npm i @libs-scripts-mep/ecil-menager
 Abra o terminal, e na pasta do script, rode:
 
 ```
-npm uninstall @libs-scripts-mep/ecil-menager
+npm uninstall @libs-scripts-mep/ecil-manager
 ```
 
 ## Atualizando
@@ -34,7 +34,7 @@ npm uninstall @libs-scripts-mep/ecil-menager
 Abra o terminal, e na pasta do script, rode:
 
 ```
-npm update @libs-scripts-mep/ecil-menager
+npm update @libs-scripts-mep/ecil-manager
 ```
 
 ## Como utilizar
@@ -42,7 +42,7 @@ npm update @libs-scripts-mep/ecil-menager
 Realize a importação:
 
 ```js
-import CappoEcil from "../node_modules/@libs-scripts-mep/ecil-menager/ecil-menager.js"
+import CappoEcil from "../node_modules/@libs-scripts-mep/ecil-manager/ecil-manager.js"
 ```
 
 As demais informações e instruções estarão disponíveis via JSDocs.
