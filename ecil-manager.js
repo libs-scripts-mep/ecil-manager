@@ -1,5 +1,5 @@
-import { Socket } from "../serialport-websocket/client.js";
-import { SerialReqManager, SerialUtil } from "../serialport-websocket/serial.js";
+import { Socket } from "../serialport-websocket/client.js"
+import { SerialReqManager, SerialUtil } from "../serialport-websocket/serial.js"
 
 
 export default class CappoEcil {
@@ -63,7 +63,7 @@ export default class CappoEcil {
 
     static async setOutputConfig(sensor, temperature, compensation = true) {
 
-        let result, configs, hexValueTemp, checkSum, dataAux = '00';
+        let result, configs, hexValueTemp, checkSum, dataAux = '00'
 
         if (compensation) {
             configs = parseInt(this.Configs.Compensation.Int + this.Configs.Function.Out + this.Configs.ITS.ITS90 + this.Configs.Scales.Celsius, 16) + this.Configs.DecimalPoint.No
@@ -86,14 +86,15 @@ export default class CappoEcil {
         checkSum.length == 1 ? checkSum = "0".concat(checkSum) : null
         checkSum.length > 2 ? checkSum = checkSum.substring(1) : null
 
-        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}19${sensor}000000${sensor}`, regex: `01` })
-        if (!result.success) { return { success: false, msg: `Falha na transmissão de dados com o Cappo Ecil.` } }
+        this.serial.read()
+        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}19${sensor}000000${sensor}`, regex: `01`, readTimeout: 100, maxTries: 10 })
+        if (!result.success) { return { success: false, msg: `Falha ao transmitir tipo de sensor para o Cappo Ecil.` } }
 
-        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}1A${configs}000000${configs}`, regex: `01` })
-        if (!result.success) { return { success: false, msg: `Falha na transmissão de dados com o Cappo Ecil.` } }
+        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}1A${configs}000000${configs}`, regex: `01`, readTimeout: 100, maxTries: 10 })
+        if (!result.success) { return { success: false, msg: `Falha ao transmitir configuração de simulação para o Cappo Ecil.` } }
 
-        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}1B${hexValueTemp[0] + hexValueTemp[1]}${hexValueTemp[2] + hexValueTemp[3]}${dataAux}00${checkSum}`, regex: `01` })
-        if (!result.success) { return { success: false, msg: `Falha na transmissão de dados com o Cappo Ecil.` } }
+        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}1B${hexValueTemp[0] + hexValueTemp[1]}${hexValueTemp[2] + hexValueTemp[3]}${dataAux}00${checkSum}`, regex: `01`, readTimeout: 100, maxTries: 10 })
+        if (!result.success) { return { success: false, msg: `Falha ao transmitir valor de temperatura para o Cappo Ecil.` } }
 
 
         return { success: true, msg: `Nova configuração recebida` }
@@ -111,7 +112,7 @@ export default class CappoEcil {
 
         console.group(`Set in Input Cappo`)
 
-        let result, configs;
+        let result, configs
 
         if (compensation) {
             configs = parseInt(this.Configs.Compensation.Int + this.Configs.Function.In + this.Configs.ITS.ITS90 + this.Configs.Scales.Celsius, 16)
@@ -122,7 +123,8 @@ export default class CappoEcil {
         configs = configs.toString(16).toUpperCase()
         configs.length == 1 ? configs = "0".concat(configs) : null
 
-        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}1A${configs}000000${configs}`, regex: `01` })
+        this.serial.read()
+        result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}1A${configs}000000${configs}`, regex: `01`, readTimeout: 100, maxTries: 10 })
         if (!result.success) { return { success: false, msg: `Falha na transmissão de dados com o Cappo Ecil.` } }
 
 
@@ -143,7 +145,8 @@ export default class CappoEcil {
 
         console.group(`Read Input Cappo`)
 
-        let result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}180000000000`, regex: `0118([A-F]|[0-9]){10}`, readTimeout: 50, maxTries: 10 })
+        this.serial.read()
+        let result = await this.serial.WatchForResponse({ request: `${this.nodeAddress}180000000000`, regex: `0118([A-F]|[0-9]){10}`, readTimeout: 100, maxTries: 10 })
         if (!result.success) { return { success: false, msg: `Falha na transmissão de dados com o Cappo Ecil.` } }
 
         console.groupEnd()
@@ -189,9 +192,9 @@ export default class CappoEcil {
                 }
 
             } else {
-                
+
                 // TA FEIO EU SEI, MAS É ISSO 
-                
+
                 number = number.toString(2).substring(1) // Transforma em binario e retira o sinal negativo
 
                 const numberSize = number.length
